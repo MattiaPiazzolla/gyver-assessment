@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model advertisement_variants {
+  id                 String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  advertisement_id   String         @db.Uuid
+  variant_name       String         @db.VarChar(100)
+  headline           String
+  body_text          String
+  call_to_action     String         @db.VarChar(255)
+  creative_notes     String?
+  generated_headline String
+  generated_body     String
+  generated_cta      String         @db.VarChar(255)
+  is_edited          Boolean        @default(false)
+  is_selected        Boolean        @default(false)
+  created_at         DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime       @default(now()) @db.Timestamptz(6)
+  advertisements     advertisements @relation(fields: [advertisement_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([advertisement_id], map: "idx_advertisement_variants_ad_id")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model advertisements {
+  id                     String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  job_offer_id           String                   @db.Uuid
+  channel                channel_type
+  format                 format_type
+  target_location        String                   @db.VarChar(255)
+  status                 ad_status                @default(DRAFT)
+  created_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  advertisement_variants advertisement_variants[]
+  job_offers             job_offers               @relation(fields: [job_offer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([channel], map: "idx_advertisements_channel")
+  @@index([job_offer_id], map: "idx_advertisements_job_offer_id")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model job_offers {
+  id               String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title            String           @db.VarChar(255)
+  description      String
+  requirements     String
+  default_location String           @db.VarChar(255)
+  created_at       DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime         @default(now()) @db.Timestamptz(6)
+  advertisements   advertisements[]
+}
+
+enum ad_status {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum channel_type {
+  JOB_BOARD
+  WHATSAPP
+  INSTAGRAM
+  TIKTOK
+}
+
+enum format_type {
+  JOB_POSTING
+  MESSAGE
+  FEED_POST
+  STORY
+}

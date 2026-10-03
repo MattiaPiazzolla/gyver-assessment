@@ -30,3 +30,10 @@ lerna-debug.log*
 
 # Testing & Coverage
 coverage/
+*.tsbuildinfo
+
+# AI & IDE helpers
+.windsurf/
+.claude/
+.agents/
+skills-lock.json

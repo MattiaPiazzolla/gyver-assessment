@@ -121,7 +121,7 @@ describe('AdvertisementsService', () => {
         },
         include: {
           job_offers: {
-            select: { id: true, title: true },
+            select: { id: true, title: true, default_location: true },
           },
           advertisement_variants: {
             select: {

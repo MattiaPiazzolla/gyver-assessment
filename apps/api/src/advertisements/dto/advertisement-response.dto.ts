@@ -22,12 +22,13 @@ export class AdvertisementVariantDetailDto extends AdvertisementVariantSummaryDt
 export class JobOfferSummaryDto {
   id: string;
   title: string;
+  defaultLocation?: string;
 }
 
 export class JobOfferDetailDto extends JobOfferSummaryDto {
   description: string;
   requirements: string;
-  defaultLocation: string;
+  declare defaultLocation: string;
 }
 
 export class AdvertisementListItemDto {

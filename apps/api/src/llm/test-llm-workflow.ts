@@ -13,12 +13,12 @@ async function runTests() {
   const llmService = app.get(LlmService);
 
   const sampleJobOffer = {
-    title: 'Senior Frontend Engineer',
+    title: 'Tecnico elettricista fotovoltaico - AB Group SpA',
     description:
-      'Cerchiamo un Senior Frontend Engineer con solida esperienza in React e TypeScript per guidare lo sviluppo delle interfacce utente della nostra piattaforma SaaS. La persona collaborerà a stretto contatto con product designer e backend engineer per rilasciare feature performanti e scalabili.',
+      'AB Group — multinazionale cogenerazione e rinnovabili (1.700 dipendenti). Carriera da Tecnico Fotovoltaico MT/BT su grandi impianti (>100 kW). Sopralluoghi, collaudi, avviamento impianti e manutenzione straordinaria. Contratto a tempo indeterminato, RAL 32.000 - 38.000 €, indennità trasferta 60 €/notte, ticket pasto 13 €, straordinari viaggio 85%, crescita a site manager.',
     requirements:
-      '- 4+ anni di esperienza con React e TypeScript\n- Ottima padronanza di Next.js e Tailwind CSS\n- Esperienza con architetture modulari e ottimizzazione delle performance web',
-    defaultLocation: 'Milano (Ibrido)',
+      '- 3-5 anni di esperienza su installazione e avviamento impianti FV industriali (>100 kW)\n- Conoscenza cabine secondarie e media tensione (MT/BT)\n- Lettura schemi elettrici unifilari e layout FV\n- Diploma tecnico elettrotecnico e disponibilità a trasferte',
+    defaultLocation: 'Via Artigianato, 27, 25034 Orzinuovi BS',
   };
 
   try {
@@ -28,7 +28,7 @@ async function runTests() {
       jobOffer: sampleJobOffer,
       channel: channel_type.JOB_BOARD,
       format: format_type.JOB_POSTING,
-      targetLocation: 'Milano (Ibrido)',
+      targetLocation: 'Via Artigianato, 27, 25034 Orzinuovi BS',
       variantsCount: 1,
     });
     console.log(JSON.stringify(jobBoardResult, null, 2));
@@ -40,7 +40,7 @@ async function runTests() {
       jobOffer: sampleJobOffer,
       channel: channel_type.WHATSAPP,
       format: format_type.MESSAGE,
-      targetLocation: 'Milano (Ibrido)',
+      targetLocation: 'Orzinuovi (BS) + trasferte',
       variantsCount: 1,
     });
     console.log(JSON.stringify(whatsappResult, null, 2));
@@ -51,8 +51,8 @@ async function runTests() {
     const instagramResult = await llmService.generateAdvertisement({
       jobOffer: sampleJobOffer,
       channel: channel_type.INSTAGRAM,
-      format: format_type.STORY,
-      targetLocation: 'Remoto (Italia)',
+      format: format_type.FEED_POST,
+      targetLocation: 'Brescia e province limitrofe',
       variantsCount: 1,
       variantGoals: ['Focus Sfida Tecnica'],
     });

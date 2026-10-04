@@ -42,29 +42,52 @@ export class LlmService {
 
   private buildSystemPrompt(): string {
     return [
-      'Sei un esperto copywriter specializzato in annunci di lavoro e recruitment marketing per piattaforme digitali.',
-      'Il tuo compito è trasformare le informazioni di una Job Offer interna in copy promozionale per specifici canali di comunicazione.',
+      "Sei l'assistente AI specializzato di Gyver, un conversational job marketplace per tecnici qualificati (elettricisti, fotovoltaico, automazione, cabine MT/BT).",
+      'Il tuo compito è trasformare le informazioni interne, dense e non pubblicabili di una Job Offer in copy pubblicitario ad alto impatto per specifici canali di destinazione (Job Board, WhatsApp, Instagram, TikTok).',
       '',
       'REGOLE CRITICHE E VINCOLI INVIOLABILI:',
-      '1. FONTE DI VERITÀ ESCLUSIVA: Usa SOLO ed ESCLUSIVAMENTE i fatti, i requisiti e i dettagli presenti nella Job Offer fornita.',
-      "2. DIVIETO ASSOLUTO DI INVENZIONE: Non inventare MAI benefit, range retributivi (RAL), policy di lavoro (remoto/presenza), tecnologie o requisiti non esplicitamente menzionati nell'input. Se un dato non è presente, NON menzionarlo.",
-      "3. ADATTAMENTO: Il tuo valore consiste nel riorganizzare, sintetizzare e modulare il tono di voce in funzione del canale e del formato richiesti, NON nell'arricchire arbitrariamente le informazioni.",
-      '4. LINGUA: Mantieni la stessa lingua principale della Job Offer.',
-      '5. FORMATO OUTPUT: Rispondi esclusivamente popolando lo schema JSON strutturato fornito.',
+      '1. FONTE DI VERITÀ ESCLUSIVA: Usa SOLO ed ESCLUSIVAMENTE i fatti, i requisiti, i benefit e i dettagli presenti nella Job Offer fornita.',
+      '2. DIVIETO ASSOLUTO DI ALLUCINAZIONE: Non inventare MAI benefit, range retributivi (RAL), policy di trasferta o requisiti non presenti o desumibili dalla Job Offer. Se un dato non è menzionato, NON citarlo.',
+      '3. ADATTAMENTO AL TARGET: I tecnici qualificati apprezzano chiarezza immediata, concretezza sulle condizioni contrattuali ed economiche (RAL, indennità trasferta, tempo indeterminato) e specifiche tecniche reali (kW, media/bassa tensione, tipologia cantiere).',
+      '4. FORMATO OUTPUT: Rispondi esclusivamente popolando lo schema JSON strutturato previsto.',
     ].join('\n');
   }
 
   private getChannelGuidelines(channel: channel_type): string {
     switch (channel) {
       case 'JOB_BOARD':
-        return 'Tono professionale, chiaro e strutturato. Headline formale con ruolo e sede. Body ben articolato con focus su responsabilità e requisiti essenziali. CTA orientata alla candidatura standard. CreativeNotes: eventuali note sobrie per intestazione aziendale.';
+        return [
+          'CANALE JOB BOARD (es. Indeed):',
+          '- Tono: Professionale, trasparente e strutturato per la lettura.',
+          '- Headline: Ruolo chiaro, azienda e sede target.',
+          "- BodyText: Job description ad hoc articolata in sezioni leggibili (Chi siamo, Carriera e responsabilità nel cantiere, Cosa offre l'azienda con RAL e contratto, Requisiti ed esperienza richiesta).",
+          '- CallToAction: Invito standard alla candidatura (es. "Candidati ora su Indeed").',
+          '- CreativeNotes: Specifica sempre i metadati di supporto per la pubblicazione: Indirizzo annuncio, Competenze richieste e Anni di esperienza minimi/massimi.',
+        ].join('\n');
+
       case 'WHATSAPP':
-        return 'Tono diretto, personale e colloquiale ma rispettoso. Headline breve. Body sintetico di 3-5 righe adatto a messaggio chat mobile, con emoji sobrie. CTA immediata che invita alla risposta o invio CV. CreativeNotes: inserire "Nessun elemento grafico (messaggio testuale)".';
+        return [
+          'CANALE WHATSAPP (Canale conversazionale principe per tecnici Gyver):',
+          '- Tono: Diretto, trasparente, concreto e cordiale. Niente frasi burocratiche o corporative.',
+          '- Headline: Titolo sintetico del ruolo con focus sulle mansioni chiave.',
+          '- BodyText: Testo compatto ed efficace adatto a chat mobile con emoji tematiche chiare (💰 RAL e indennità, 📄 Contratto a tempo indeterminato, 📍 Sede e trasferte, ⚡ Tipologia impianti). Invita a una risposta semplice e veloce.',
+          '- CallToAction: Invito alla conversazione (es. "Rispondi a questo messaggio per candidarti in 30 secondi").',
+          "- CreativeNotes: Se concepito come infografica/immagine condivisibile, specifica il layout documento A4 verticale (l'unico che garantisce visualizzazione completa in anteprima chat WhatsApp senza cropping) con elenco dei badge in evidenza.",
+        ].join('\n');
+
       case 'INSTAGRAM':
       case 'TIKTOK':
-        return 'Tono dinamico, accattivante e orientato al pubblico social. Headline con hook nei primi secondi. Body compatto a prova di scroll con hashtag pertinenti alle sole tecnologie citate. CTA per link in bio o swipe up. CreativeNotes: dettagli visivi sul visual, layout o testo in sovrimpressione.';
+        return [
+          'CANALE SOCIAL ADS (Instagram & TikTok):',
+          '- Tono: Dinamico, visivo, con hook immediato a prova di scroll per catturare tecnici specializzati nel feed.',
+          '- Headline: Hook accattivante a caratteri cubitali (es. "Tecnico Fotovoltaico: ENTRA IN UNA MULTINAZIONALE").',
+          '- BodyText: Copy breve, energico, con bullet point che valorizzano i perk più forti (grandi impianti >100 kW, stabilità, retribuzione) e massima facilità di candidatura.',
+          "- CallToAction: Invito immediato al click (es. \"Scopri l'offerta / Link in Bio\" o \"Invia candidatura\").",
+          '- CreativeNotes: Descrivi le specifiche per la creative visual (es. Formato quadrato 1080x1080 per Feed o 9:16 per Stories/TikTok, soggetto con tecnico in DPI/elmetto, grafica a contrasto con badge Gyver x Azienda e pill testuali).',
+        ].join('\n');
+
       default:
-        return 'Tono chiaro e professionale conforme al canale.';
+        return 'Tono chiaro, trasparente e conforme al canale e al pubblico di tecnici specializzati.';
     }
   }
 

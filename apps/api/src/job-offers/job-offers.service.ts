@@ -5,9 +5,10 @@ import { DatabaseService } from '../database/database.service';
 export class JobOffersService {
   constructor(private readonly db: DatabaseService) {}
 
-  async findAll() {
+  async findAll(companyId?: string) {
     return this.db.job_offers.findMany({
-      orderBy: { created_at: 'desc' },
+      where: companyId ? { company_id: companyId } : undefined,
+      orderBy: { created_at: 'asc' },
     });
   }
 

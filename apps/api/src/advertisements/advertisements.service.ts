@@ -461,6 +461,7 @@ export class AdvertisementsService {
           select: {
             id: true,
             title: true,
+            default_location: true,
           },
         },
         advertisement_variants: {
@@ -480,6 +481,7 @@ export class AdvertisementsService {
       jobOffer: {
         id: ad.job_offers.id,
         title: ad.job_offers.title,
+        defaultLocation: ad.job_offers.default_location,
       },
       channel: ad.channel,
       format: ad.format,

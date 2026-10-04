@@ -1,6 +1,9 @@
-import { IsUUID } from 'class-validator';
+import { Matches } from 'class-validator';
+
+export const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export class IdParamDto {
-  @IsUUID('4', { message: "L'ID fornito deve essere un UUID v4 valido." })
+  @Matches(UUID_REGEX, { message: "L'ID fornito deve essere un UUID valido." })
   id: string;
 }

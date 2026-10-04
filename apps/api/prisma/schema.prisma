@@ -8,21 +8,21 @@ datasource db {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model advertisement_variants {
-  id                 String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  advertisement_id   String         @db.Uuid
-  variant_name       String         @db.VarChar(100)
-  headline           String
-  body_text          String
-  call_to_action     String         @db.VarChar(255)
-  creative_notes     String?
-  generated_headline String
-  generated_body     String
-  generated_cta      String         @db.VarChar(255)
-  is_edited          Boolean        @default(false)
-  is_selected        Boolean        @default(false)
-  created_at         DateTime       @default(now()) @db.Timestamptz(6)
-  updated_at         DateTime       @default(now()) @db.Timestamptz(6)
-  advertisements     advertisements @relation(fields: [advertisement_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id                  String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  advertisement_id    String         @db.Uuid
+  variant_name        String         @db.VarChar(100)
+  headline            String
+  body_text           String
+  call_to_action      String         @db.VarChar(255)
+  creative_notes      String?
+  generated_headline  String
+  generated_body      String
+  generated_cta       String         @db.VarChar(255)
+  is_edited           Boolean        @default(false)
+  is_selected         Boolean        @default(false)
+  created_at          DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime       @default(now()) @db.Timestamptz(6)
+  advertisements      advertisements @relation(fields: [advertisement_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([advertisement_id], map: "idx_advertisement_variants_ad_id")
 }
@@ -47,6 +47,7 @@ model advertisements {
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model job_offers {
   id               String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  company_id       String           @default(dbgenerated("'a0000000-0000-0000-0000-000000000001'::uuid")) @db.Uuid
   title            String           @db.VarChar(255)
   description      String
   requirements     String
@@ -54,6 +55,8 @@ model job_offers {
   created_at       DateTime         @default(now()) @db.Timestamptz(6)
   updated_at       DateTime         @default(now()) @db.Timestamptz(6)
   advertisements   advertisements[]
+
+  @@index([company_id], map: "idx_job_offers_company_id")
 }
 
 enum ad_status {

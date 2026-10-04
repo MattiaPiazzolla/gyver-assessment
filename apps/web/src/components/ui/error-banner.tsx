@@ -11,7 +11,7 @@ export function ErrorBanner({ message, onDismiss }: ErrorBannerProps) {
   return (
     <div className="p-4 border border-red-900/60 bg-red-950/40 text-red-300 text-xs rounded-xl flex items-start justify-between gap-3 shadow-none">
       <div className="flex items-start gap-2">
-        <span className="font-bold text-red-400 font-mono">{"// Errore:"}</span>
+        <span className="font-semibold text-red-400">Errore:</span>
         <span className="font-normal text-red-200">{message}</span>
       </div>
       {onDismiss && (

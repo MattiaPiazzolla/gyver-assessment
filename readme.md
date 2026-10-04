@@ -1,37 +1,60 @@
 # Gyver — Sezione Annunci (Delivery Team)
 
-Soluzione per l'assessment tecnico Gyver: nucleo della sezione Annunci per il team di Delivery per la trasformazione di offerte di lavoro dense in annunci ottimizzati multicanale (Job Board, WhatsApp, Social Ads).
+Nucleo applicativo per il team di Delivery di Gyver: piattaforma per trasformare offerte di lavoro dense e interne in annunci pubblicitari multicanale (Job Board, WhatsApp, Instagram, TikTok) tramite LLM con Structured Outputs, generazione di varianti e modifica manuale con persistenza dello storico originale.
 
 ---
 
-## 🏗️ Panoramica Architettura
+## 🏗️ Struttura della Repository
 
-Il repository è organizzato come monorepo chiaro e modulare:
-* **`apps/api`**: Backend in **NestJS** + **Prisma ORM** + **PostgreSQL** + **OpenAI API** (Structured Outputs con schema strict).
-* **`apps/web`**: Frontend in **Next.js 15** (App Router) + **Tailwind CSS** per la consultazione, creazione con AI e modifica manuale delle varianti.
-* **`docs/migrations`**: Script SQL di schema, migrazioni e seeding contenenti la Job Offer reale dell'assessment e gli annunci di esempio.
+Il repository è strutturato come monorepo leggero:
 
----
-
-## ⚙️ Variabili d'Ambiente
-
-### 1. Backend (`apps/api/.env`)
-Copia il file di esempio se non presente:
-```bash
-cp apps/api/.env.example apps/api/.env
+```text
+gyver/
+├── apps/
+│   ├── api/             # Backend NestJS (REST API, Prisma ORM, modulo LLM OpenAI)
+│   └── web/             # Frontend Next.js (App Router, Tailwind CSS, interfaccia Delivery)
+├── docs/
+│   └── migrations/      # Script SQL DDL di schema, migrazioni e seed
+├── architecture.md      # Documentazione architetturale e modello dati
+├── prompts.md           # Specifiche e guardrail del workflow LLM
+├── ai-workflows.md      # Metodologia di sviluppo assistita da AI
+└── tradeoffs.md         # Registro delle decisioni architetturali e tradeoff
 ```
-Variabili richieste:
+
+---
+
+## ⚙️ Prerequisiti e Variabili d'Ambiente
+
+### Prerequisiti
+* **Node.js**: >= 20.x
+* **npm**: >= 10.x
+* **PostgreSQL** (locale o istanza gestita Supabase)
+* **OpenAI API Key**: chiave con accesso a modelli che supportano Structured Outputs (`gpt-4o-mini` o `gpt-4o`)
+
+---
+
+### 1. Configurazione Backend (`apps/api/.env`)
+
+Crea il file `apps/api/.env` (puoi basarti su `apps/api/.env.example`):
+
 ```env
 PORT=3001
 NODE_ENV=development
-DATABASE_URL="postgresql://utente:password@host:5432/postgres?pgbouncer=true"
-DIRECT_URL="postgresql://utente:password@host:5432/postgres"
+DATABASE_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-eu-west-1.pooler.supabase.com:5432/postgres"
 OPENAI_API_KEY="sk-proj-..."
 ```
-> **Nota su OpenAI API Key**: Serve una chiave con accesso ai modelli `gpt-4o-mini` o `gpt-4o` con supporto a Structured Outputs (`response_format: json_schema strict`). Ottenibile su [platform.openai.com](https://platform.openai.com).
 
-### 2. Frontend (`apps/web/.env`)
+> **Nota sulle connessioni PostgreSQL**: `DATABASE_URL` è usata per il connection pooling dell'applicazione, mentre `DIRECT_URL` è impiegata dallo script di seed per le query DDL dirette.
+
+---
+
+### 2. Configurazione Frontend (`apps/web/.env`)
+
+Crea il file `apps/web/.env` (puoi basarti su `apps/web/.env.example`):
+
 ```env
+PORT=3000
 NEXT_PUBLIC_API_URL=http://localhost:3001
 NEXT_PUBLIC_DEFAULT_COMPANY_ID=a0000000-0000-0000-0000-000000000001
 ```
@@ -40,88 +63,98 @@ NEXT_PUBLIC_DEFAULT_COMPANY_ID=a0000000-0000-0000-0000-000000000001
 
 ## 🚀 Installazione e Avvio Rapido
 
-### 1. Installazione Dipendenze
-Dalla cartella principale del progetto o dalle singole app:
+### 1. Installazione delle dipendenze
+
+Dalla root del repository:
+
 ```bash
-# Dipendenze Backend
+# Dipendenze Backend (NestJS + Prisma + OpenAI)
 cd apps/api
 npm install
 
-# Dipendenze Frontend
+# Dipendenze Frontend (Next.js + Tailwind CSS)
 cd ../web
 npm install
 ```
 
-### 2. Inizializzazione e Popolamento Database (Seed)
-Per applicare le migrazioni SQL e caricare la Job Offer ufficiale (**Tecnico elettricista fotovoltaico - AB Group SpA**) e i 3 annunci pre-popolati con varianti:
+---
+
+### 2. Configurazione Database, Migrazioni e Seed
+
+Dalla cartella `apps/api`, esegui lo script di popolamento automatico. Lo script esegue in sequenza la DDL dello schema, l'ownership multi-tenant e i dati seed ufficiali (Job Offer per Tecnico Elettricista Fotovoltaico AB Group SpA e 3 annunci pre-popolati):
+
 ```bash
 cd apps/api
 npm run db:seed
 ```
-*In alternativa*, se preferisci eseguire gli script SQL manualmente tramite `psql`:
+
+*(Opzionale) In alternativa manuale con client `psql`:*
 ```bash
-psql $DATABASE_URL -f ../../docs/migrations/001_initial_schema.sql
-psql $DATABASE_URL -f ../../docs/migrations/005_add_company_ownership.sql
-psql $DATABASE_URL -f ../../docs/migrations/002_seed_job_offer.sql
-psql $DATABASE_URL -f ../../docs/migrations/003_seed_advertisements.sql
+psql $DIRECT_URL -f ../../docs/migrations/001_initial_schema.sql
+psql $DIRECT_URL -f ../../docs/migrations/005_add_company_ownership.sql
+psql $DIRECT_URL -f ../../docs/migrations/002_seed_job_offer.sql
+psql $DIRECT_URL -f ../../docs/migrations/003_seed_advertisements.sql
 ```
 
-### 3. Avvio Applicazione
-In due terminali separati:
+---
+
+### 3. Avvio delle Applicazioni
+
+Apri due terminali distinti:
+
 ```bash
-# Terminale 1 — Backend (Porta 3001)
+# Terminale 1: Backend API (Porta 3001)
 cd apps/api
 npm run start:dev
+```
 
-# Terminale 2 — Frontend (Porta 3000)
+```bash
+# Terminale 2: Frontend Web (Porta 3000)
 cd apps/web
 npm run dev
 ```
 
-L'interfaccia web si apre su: **`http://localhost:3000`**  
-Le API REST rispondono su: **`http://localhost:3001`**
+* **Frontend UI**: [http://localhost:3000](http://localhost:3000)
+* **Backend API REST**: [http://localhost:3001](http://localhost:3001)
 
 ---
 
-## 🚶‍♂️ Percorso Guidato per Testare il Flusso Completo
+## 🚶‍♂️ Percorso Rapido di Test End-to-End
 
-1. **Consultazione Annunci Esistenti:**
-   * Apri `http://localhost:3000`.
-   * Troverai subito i 3 annunci pre-popolati:
-     1. **JOB_BOARD (Indeed):** formato solo testo strutturato a sezioni con metadati di sede e competenze.
-     2. **WHATSAPP:** copia ottimizzata con badge per anteprima immagine documento A4 e testo per chat.
-     3. **INSTAGRAM / TIKTOK:** visual creative 1080x1080 con hook a forte impatto.
-   * Utilizza i filtri per testare la ricerca per canale o per Job Offer.
+Segui questo percorso per verificare l'intero ciclo di vita dell'applicazione:
 
-2. **Creazione Nuovo Annuncio con Generazione AI:**
-   * Clicca su **"+ Nuovo Annuncio"**.
+1. **Configura e avvia database e API**: completa seed e avvio di `apps/api` (porta 3001).
+2. **Avvia il frontend**: avvia `apps/web` (porta 3000) e visita `http://localhost:3000`.
+3. **Apri la lista annunci**: nella dashboard iniziale visualizzi i 3 annunci precaricati (Job Board, WhatsApp, Instagram/TikTok). Puoi testare i filtri dinamici per canale e per Job Offer.
+4. **Crea un nuovo Advertisement**:
+   * Clicca su **"+ Nuovo Annuncio"** in alto a destra.
    * Seleziona la Job Offer *Tecnico elettricista fotovoltaico - AB Group SpA*.
-   * Scegli un canale (es. `WHATSAPP` o `TIKTOK`).
-   * (Opzionale) Personalizza la sede target (es. *"Brescia e provincia"*) e l'obiettivo (es. *"Enfatizza l'indennità trasferta e i ticket pasto"*).
-   * Clicca su **"Genera Annuncio"**: il backend interroga l'LLM, valida la risposta tramite schema strict, persiste l'annuncio e ti reindirizza alla pagina di dettaglio.
-
-3. **Creazione di Ulteriori Varianti:**
-   * Nella pagina di dettaglio dell'annuncio appena creato, clicca su **"+ Genera Nuova Variante (AI)"**.
-   * Inserisci un angolo diverso (es. *"Focus su crescita rapida a capo cantiere"*).
-   * L'AI genererà una nuova variante memorizzandola nel database.
-
-4. **Modifica Manuale (Sovrascrittura):**
-   * Accanto a qualsiasi variante, clicca su **"Modifica"**.
-   * Modifica il titolo, il testo del body, la CTA o le note creative.
-   * Clicca su **"Salva Modifiche"**: il badge passerà da *Originale AI* a *Modificata*, mantenendo salvati nel database sia il testo originale generato sia la versione revisionata a mano.
+   * Seleziona un canale (es. `WHATSAPP` o `TIKTOK`).
+   * (Opzionale) Imposta sede target e indicazioni per la prima variante (es. *"Enfatizza RAL 38.000€ e tempo indeterminato"*).
+   * Clicca su **"Genera Annuncio"**: il backend invoca l'LLM con schema strict OpenAI, persiste la transazione atomica (annuncio + prima variante) e reindirizza al dettaglio.
+5. **Genera una nuova Variant (AI)**:
+   * Nel dettaglio dell'annuncio, premi **"+ Genera Nuova Variante (AI)"**.
+   * Inserisci un nuovo angolo comunicativo (es. *"Focus su crescita rapida a Capo Squadra e trasferte con indennità"*).
+   * L'AI genera una variante aggiuntiva coerente con il canale, convalidata e persistita sul database.
+6. **Modifica manuale della Variant**:
+   * Clicca su **"Modifica"** sulla card di una variante.
+   * Modifica a piacimento Titolo, Testo, Call to Action o Note Creative.
+   * Clicca **"Salva Modifiche"**: la variante viene marcata come `Modificata` (`is_edited: true`), ma i campi `generated_headline`, `generated_body` e `generated_cta` restano intatti nel database a fini di tracciamento e audit.
 
 ---
 
-## 🧪 Esempi di Chiamata cURL (Backend API)
+## 🧪 Esempi di Chiamate API (cURL)
 
-Se desideri testare gli endpoint direttamente via riga di comando, passa l'header `x-company-id`:
+Il backend valida l'ownership multi-tenant tramite l'header obbligatorio `x-company-id`.
 
+### 1. Elenco Annunci con Filtri
 ```bash
-# 1. Lista annunci
-curl -X GET "http://localhost:3001/advertisements" \
+curl -X GET "http://localhost:3001/advertisements?channel=WHATSAPP" \
   -H "x-company-id: a0000000-0000-0000-0000-000000000001"
+```
 
-# 2. Creazione annuncio con AI
+### 2. Creazione Annuncio + Variante Iniziale via LLM
+```bash
 curl -X POST "http://localhost:3001/advertisements" \
   -H "Content-Type: application/json" \
   -H "x-company-id: a0000000-0000-0000-0000-000000000001" \
@@ -129,7 +162,28 @@ curl -X POST "http://localhost:3001/advertisements" \
     "jobOfferId": "00000000-0000-0000-0000-000000000001",
     "channel": "WHATSAPP",
     "format": "MESSAGE",
-    "targetLocation": "Orzinuovi (BS) + trasferte",
-    "variantGoals": "Tono diretto ed enfasi su contratto a tempo indeterminato e RAL 38.000€"
+    "targetLocation": "Orzinuovi (BS) + trasferte Nord Italia",
+    "variantGoals": "Enfasi su tempo indeterminato, RAL fino a 38k e ticket ristorante"
+  }'
+```
+
+### 3. Generazione di una Variante Aggiuntiva
+```bash
+curl -X POST "http://localhost:3001/advertisements/<ADVERTISEMENT_ID>/variants" \
+  -H "Content-Type: application/json" \
+  -H "x-company-id: a0000000-0000-0000-0000-000000000001" \
+  -d '{
+    "variantGoals": "Target giovani tecnici: focus su affiancamento, corsi PES/PAV e crescita professionale"
+  }'
+```
+
+### 4. Modifica Manuale di una Variante
+```bash
+curl -X PATCH "http://localhost:3001/advertisements/<ADVERTISEMENT_ID>/variants/<VARIANT_ID>" \
+  -H "Content-Type: application/json" \
+  -H "x-company-id: a0000000-0000-0000-0000-000000000001" \
+  -d '{
+    "headline": "Tecnico Fotovoltaico Specializzato — Inserimento Diretto",
+    "callToAction": "Rispondi su WhatsApp con CV o lista esperienze"
   }'
 ```

@@ -1,188 +1,248 @@
 @import "tailwindcss";
 
 :root {
-  --bg-0: #0A0A0B;      /* fondo base scuro */
-  --bg-1: #141417;      /* superfici */
-  --ink: #F5F5F5;       /* testo */
-  --accent-1: #FF6A00;  /* arancio energia */
-  --accent-2: #FFC700;  /* giallo scintilla */
-  --accent-3: #FF2D55;  /* spark rosso (bordo gradiente) */
-  --grid: rgba(255,255,255,.06);
+  --bg-main: #000000;
+  --bg-gradient:
+    radial-gradient(ellipse 55% 50% at 10% 0%, rgba(10, 60, 160, 0.55) 0%, rgba(5, 30, 90, 0.25) 45%, transparent 70%),
+    radial-gradient(ellipse 70% 45% at 50% 100%, rgba(160, 45, 10, 0.45) 0%, rgba(90, 20, 5, 0.20) 50%, transparent 80%),
+    #000000;
+  --cta-gradient: linear-gradient(90deg, #EF3C00 0%, #C23105 100%);
+  --cta-gradient-hover: linear-gradient(90deg, #FF4B12 0%, #D43906 100%);
+  --pill-bg: #242528;
+  --pill-border: #383842;
+  --surface: #111111;
+  --surface-hover: #171717;
+  --text-primary: #F5F5F5;
+  --text-secondary: #A6A6A6;
+  --text-muted: #737373;
+  --border: #292929;
+  --border-hover: #383838;
+  --accent: #EF3C00;
+  --accent-hover: #FF4B12;
+
+  --ease-gyver: cubic-bezier(0.16, 1, 0.3, 1);
   color-scheme: dark;
 }
 
 @theme {
-  --color-gyver-orange: #FF6A00;
-  --color-gyver-orange-hover: #FF7D1F;
-  --color-gyver-orange-muted: rgba(255, 106, 0, 0.12);
-  --color-gyver-orange-border: rgba(255, 106, 0, 0.35);
-
-  --color-gyver-bg: #0A0A0B;
-  --color-gyver-bg-secondary: #141417;
-  --color-gyver-surface-1: #111111;
-  --color-gyver-surface-2: #181818;
-
+  --color-gyver-orange: #EF3C00;
+  --color-gyver-orange-hover: #FF4B12;
+  --color-gyver-bg: #000000;
+  --color-gyver-bg-secondary: #0D0D0D;
+  --color-gyver-surface: #111111;
+  --color-gyver-surface-hover: #171717;
   --color-gyver-text-primary: #F5F5F5;
   --color-gyver-text-secondary: #A6A6A6;
   --color-gyver-text-muted: #737373;
-
   --color-gyver-border: #292929;
   --color-gyver-border-hover: #383838;
 }
 
 body {
-  background-color: var(--bg-0);
-  color: var(--ink);
-  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  letter-spacing: -0.015em;
+  background:
+    radial-gradient(ellipse 55% 50% at 10% 0%, rgba(10, 60, 160, 0.55) 0%, rgba(5, 30, 90, 0.25) 45%, transparent 70%),
+    radial-gradient(ellipse 70% 45% at 50% 100%, rgba(160, 45, 10, 0.45) 0%, rgba(90, 20, 5, 0.20) 50%, transparent 80%),
+    #000000;
+  background-attachment: fixed;
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
 }
 
-/* 1. GRADIENTE DI SFONDO (sezione hero) */
-.hero {
-  position: relative;
-  background:
-    radial-gradient(120% 120% at 50% -10%, rgba(255,106,0,.22) 0%, transparent 55%),
-    radial-gradient(80% 80% at 85% 20%, rgba(255,199,0,.15) 0%, transparent 50%),
-    linear-gradient(180deg, #0A0A0B 0%, #141417 100%);
-  overflow: hidden;
+h1, h2, h3, h4, h5, h6 {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  letter-spacing: -0.02em;
 }
 
-/* glow pulsante dietro al titolo */
-.hero::before {
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+.select-control {
+  position: relative;
+}
+
+.select-control select {
+  appearance: none;
+  padding-right: 3rem;
+  cursor: pointer;
+}
+
+.select-control::after {
   content: "";
   position: absolute;
-  inset: -20%;
-  background: radial-gradient(40% 40% at 50% 30%, rgba(255,106,0,.35), transparent 70%);
-  filter: blur(60px);
-  animation: glowPulse 6s ease-in-out infinite;
-  z-index: 0;
-}
-
-@keyframes glowPulse {
-  0%,100% { opacity:.5; transform:scale(1); }
-  50%     { opacity:.9; transform:scale(1.08); }
-}
-
-.hero > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Griglia tecnica sopra lo sfondo */
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  right: 1.25rem;
+  top: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 1.5px solid #a6a6a6;
+  border-bottom: 1.5px solid #a6a6a6;
+  transform: translateY(-70%) rotate(45deg);
   pointer-events: none;
+}
+
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid #ff6b43;
+  outline-offset: 3px;
+}
+
+.modal-panel {
+  animation: modal-enter 220ms var(--ease-gyver) both;
+}
+
+@keyframes modal-enter {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* CAD Technical Grid (sottile, 4% opacità) */
+.bg-technical-grid {
   background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(70% 70% at 50% 30%, #000 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(70% 70% at 50% 30%, #000 40%, transparent 100%);
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 36px 36px;
 }
 
-/* 2. TITOLO — gradiente animato sul testo */
-.hero-title {
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -.02em;
-  line-height: 1.02;
-  background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3), var(--accent-1));
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradientShift 8s linear infinite;
+/* Card & Surface Hover (translateY -2px e bordo più chiaro) */
+.card-hover {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  transition: transform 200ms var(--ease-gyver), border-color 200ms var(--ease-gyver), background-color 200ms var(--ease-gyver);
 }
 
-@keyframes gradientShift {
-  to { background-position: 300% 0; }
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
+  background-color: var(--surface-hover);
 }
 
-/* 3. ANIMAZIONE LETTERA PER LETTERA */
-.word-accent .ch {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(.6em) rotateX(-40deg);
-  transform-origin: 50% 100%;
-  animation: letterIn .6s cubic-bezier(.2,.7,.2,1) forwards;
+/* CTA Principale: Gradiente rosso-arancio caldo, angoli smussati e ombra morbida (stile Scopri di piu) */
+.btn-accent {
+  background: linear-gradient(90deg, #EF3C00 0%, #C23105 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px -2px rgba(239, 60, 0, 0.42), 0 2px 5px rgba(0, 0, 0, 0.35);
+  transition: transform 180ms var(--ease-gyver), box-shadow 180ms var(--ease-gyver), filter 180ms var(--ease-gyver);
+  letter-spacing: -0.01em;
 }
 
-.word-accent .ch:nth-child(1) { animation-delay: .00s; }
-.word-accent .ch:nth-child(2) { animation-delay: .045s; }
-.word-accent .ch:nth-child(3) { animation-delay: .09s; }
-.word-accent .ch:nth-child(4) { animation-delay: .135s; }
-.word-accent .ch:nth-child(5) { animation-delay: .18s; }
-.word-accent .ch:nth-child(6) { animation-delay: .225s; }
-.word-accent .ch:nth-child(7) { animation-delay: .27s; }
-.word-accent .ch:nth-child(8) { animation-delay: .315s; }
-
-@keyframes letterIn {
-  to { opacity: 1; transform: translateY(0) rotateX(0); }
+.btn-accent:hover {
+  background: linear-gradient(90deg, #FF4B12 0%, #D43906 100%);
+  box-shadow: 0 6px 24px -2px rgba(239, 60, 0, 0.58), 0 3px 8px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+  filter: brightness(1.04);
 }
 
-/* 4. ENTRATA ELEMENTI (sottotitolo, CTA, stat) */
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  animation: reveal .7s ease forwards;
-}
-.reveal.d1 { animation-delay: .35s; }
-.reveal.d2 { animation-delay: .5s; }
-.reveal.d3 { animation-delay: .65s; }
-
-@keyframes reveal {
-  to { opacity: 1; transform: none; }
+.btn-accent:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
+  box-shadow: 0 2px 8px rgba(239, 60, 0, 0.3);
 }
 
-/* 5. CTA con glow */
-.btn-primary {
-  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
-  color: #0A0A0B;
-  font-weight: 700;
-  border: 0;
-  border-radius: 10px;
-  padding: .9em 1.4em;
-  box-shadow: 0 0 0 rgba(255, 106, 0, 0);
-  transition: box-shadow .25s, transform .15s;
+/* Pulsante Secondario: Tono scuro #242528 con bordo #383842 (stile pillola navbar) */
+.btn-secondary {
+  background-color: #242528;
+  color: #FFFFFF;
+  border: 1px solid #383842;
+  border-radius: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: background-color 180ms var(--ease-gyver), border-color 180ms var(--ease-gyver), transform 180ms var(--ease-gyver), color 180ms var(--ease-gyver);
 }
 
-.btn-primary:hover {
-  box-shadow: 0 8px 30px rgba(255, 106, 0, .45);
+.btn-secondary:hover {
+  background-color: #2F3035;
+  border-color: #4C4D56;
+  color: #FFFFFF;
   transform: translateY(-1px);
 }
 
-/* 6. Accessibilità (obbligatorio) */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* Badge a pillola arrotondato stile navbar */
+.pill-badge {
+  background-color: #242528;
+  border: 1px solid #383842;
+  border-radius: 9999px;
+  color: #FFFFFF;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Fade + slide-up d'ingresso */
+.fade-up {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUpAnim 500ms var(--ease-gyver) forwards;
+}
+
+.fade-up.d1 { animation-delay: 80ms; }
+.fade-up.d2 { animation-delay: 160ms; }
+.fade-up.d3 { animation-delay: 240ms; }
+.fade-up.d4 { animation-delay: 320ms; }
+
+@keyframes fadeUpAnim {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  .hero-title, .word-accent .ch, .reveal {
+}
+
+/* Marquee Orizzontale per ruoli e community */
+.marquee-container {
+  overflow: hidden;
+  user-select: none;
+  display: flex;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-content {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  animation: marqueeAnim 28s linear infinite;
+}
+
+.marquee-container:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeAnim {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Accessibilità per prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .fade-up {
     opacity: 1 !important;
     transform: none !important;
   }
+  .marquee-content {
+    animation: none !important;
+  }
 }
 
-/* CAD & Engineering Technical Grid for dashboard background */
-.bg-technical-grid {
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-/* Custom scrollbars for dark engineering look */
+/* Custom scrollbar pulita e scura */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0A0B;
+  background: #080808;
 }
 
 ::-webkit-scrollbar-thumb {

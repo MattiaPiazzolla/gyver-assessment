@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { api } from '@/lib/api-client';
 import { AdvertisementVariant, UpdateVariantPayload } from '@/types/api';
+import { Modal } from '@/components/ui/modal';
 
 interface VariantEditFormProps {
   advertisementId: string;
@@ -53,16 +54,17 @@ export function VariantEditForm({
   };
 
   return (
+    <Modal titleId={`edit-variant-${variant.id}`} onClose={onCancel} busy={isSubmitting} className="max-w-2xl">
     <form
       onSubmit={handleSubmit}
-      className="border border-[#FF4B1F]/40 bg-[#111111] rounded-xl p-6 space-y-5"
+      className="p-6 sm:p-8 space-y-6"
     >
-      <div className="flex items-center justify-between pb-3 border-b border-[#292929]">
+      <div className="flex items-center justify-between pb-3 border-b border-[#292933]">
         <div>
-          <div className="text-[11px] font-mono text-[#FF4B1F] uppercase tracking-wider">
-            {"// Modifica Manuale"}
+          <div className="text-xs font-semibold text-[#EF3C00] uppercase tracking-wider">
+            Modifica Manuale
           </div>
-          <h4 className="text-sm font-bold text-[#F5F5F5] mt-0.5">
+          <h4 id={`edit-variant-${variant.id}`} className="text-base font-bold text-white tracking-tight mt-0.5">
             {variant.variantName || 'Variante'}
           </h4>
         </div>
@@ -70,14 +72,14 @@ export function VariantEditForm({
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="text-xs font-mono text-[#737373] hover:text-[#F5F5F5] disabled:opacity-50"
+          className="text-xs text-[#8E8E93] hover:text-white disabled:opacity-50 transition-colors"
         >
           Annulla &times;
         </button>
       </div>
 
       {error && (
-        <div className="p-3 border border-red-900/60 bg-red-950/40 text-red-300 text-xs rounded-lg">
+        <div className="p-3.5 border border-red-900/60 bg-red-950/40 text-red-300 text-xs rounded-xl">
           {error}
         </div>
       )}
@@ -85,27 +87,28 @@ export function VariantEditForm({
       <div>
         <label
           htmlFor={`headline-${variant.id}`}
-          className="block text-xs font-mono font-medium text-[#A6A6A6] uppercase tracking-wider mb-2"
+          className="block text-xs font-semibold text-[#A6A6A6] mb-1.5"
         >
-          {"// Headline *"}
+          Headline *
         </label>
         <input
           id={`headline-${variant.id}`}
+          data-auto-focus
           type="text"
           value={headline}
           disabled={isSubmitting}
           onChange={(e) => setHeadline(e.target.value)}
           required
-          className="w-full px-3.5 py-2.5 text-sm border border-[#292929] rounded-lg bg-[#181818] text-[#F5F5F5] focus:border-[#FF4B1F] focus:ring-1 focus:ring-[#FF4B1F] focus:outline-none disabled:opacity-50"
+          className="w-full px-4 py-2.5 text-sm border border-[#2a2b36] rounded-xl bg-[#18181f] text-white focus:border-[#EF3C00] focus:ring-1 focus:ring-[#EF3C00] focus:outline-none disabled:opacity-50 transition-colors"
         />
       </div>
 
       <div>
         <label
           htmlFor={`bodyText-${variant.id}`}
-          className="block text-xs font-mono font-medium text-[#A6A6A6] uppercase tracking-wider mb-2"
+          className="block text-xs font-semibold text-[#A6A6A6] mb-1.5"
         >
-          {"// Body Copy *"}
+          Testo Annuncio (Body) *
         </label>
         <textarea
           id={`bodyText-${variant.id}`}
@@ -114,7 +117,7 @@ export function VariantEditForm({
           disabled={isSubmitting}
           onChange={(e) => setBodyText(e.target.value)}
           required
-          className="w-full px-3.5 py-2.5 text-sm border border-[#292929] rounded-lg bg-[#181818] text-[#F5F5F5] focus:border-[#FF4B1F] focus:ring-1 focus:ring-[#FF4B1F] focus:outline-none disabled:opacity-50 font-normal leading-relaxed"
+          className="w-full px-4 py-3 text-sm border border-[#2a2b36] rounded-xl bg-[#18181f] text-white focus:border-[#EF3C00] focus:ring-1 focus:ring-[#EF3C00] focus:outline-none disabled:opacity-50 font-normal leading-relaxed transition-colors"
         />
       </div>
 
@@ -122,9 +125,9 @@ export function VariantEditForm({
         <div>
           <label
             htmlFor={`cta-${variant.id}`}
-            className="block text-xs font-mono font-medium text-[#A6A6A6] uppercase tracking-wider mb-2"
+            className="block text-xs font-semibold text-[#A6A6A6] mb-1.5"
           >
-            {"// Call To Action *"}
+            Call To Action *
           </label>
           <input
             id={`cta-${variant.id}`}
@@ -133,16 +136,16 @@ export function VariantEditForm({
             disabled={isSubmitting}
             onChange={(e) => setCallToAction(e.target.value)}
             required
-            className="w-full px-3.5 py-2.5 text-sm border border-[#292929] rounded-lg bg-[#181818] text-[#F5F5F5] focus:border-[#FF4B1F] focus:ring-1 focus:ring-[#FF4B1F] focus:outline-none disabled:opacity-50"
+            className="w-full px-4 py-2.5 text-sm border border-[#2a2b36] rounded-xl bg-[#18181f] text-white focus:border-[#EF3C00] focus:ring-1 focus:ring-[#EF3C00] focus:outline-none disabled:opacity-50 transition-colors"
           />
         </div>
 
         <div>
           <label
             htmlFor={`notes-${variant.id}`}
-            className="block text-xs font-mono font-medium text-[#A6A6A6] uppercase tracking-wider mb-2"
+            className="block text-xs font-semibold text-[#A6A6A6] mb-1.5"
           >
-            {"// Note Tecniche Canale (Opzionale)"}
+            Note Tecniche Canale (opzionale)
           </label>
           <input
             id={`notes-${variant.id}`}
@@ -150,28 +153,29 @@ export function VariantEditForm({
             value={creativeNotes}
             disabled={isSubmitting}
             onChange={(e) => setCreativeNotes(e.target.value)}
-            className="w-full px-3.5 py-2.5 text-sm border border-[#292929] rounded-lg bg-[#181818] text-[#F5F5F5] focus:border-[#FF4B1F] focus:ring-1 focus:ring-[#FF4B1F] focus:outline-none disabled:opacity-50 font-mono text-xs"
+            className="w-full px-4 py-2.5 text-sm border border-[#2a2b36] rounded-xl bg-[#18181f] text-white focus:border-[#EF3C00] focus:ring-1 focus:ring-[#EF3C00] focus:outline-none disabled:opacity-50 font-mono text-xs transition-colors"
           />
         </div>
       </div>
 
-      <div className="flex justify-end gap-3 pt-3 border-t border-[#292929]">
+      <div className="flex justify-end gap-3 pt-3 border-t border-[#292933]">
         <button
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="px-4 py-2 text-xs font-semibold text-[#A6A6A6] hover:text-[#F5F5F5] bg-transparent hover:bg-[#181818] border border-[#292929] rounded-lg transition-colors disabled:opacity-50"
+          className="btn-secondary px-4 py-2 text-xs font-semibold disabled:opacity-50 cursor-pointer"
         >
           Annulla
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold text-white bg-[#FF4B1F] hover:bg-[#FF5525] rounded-lg shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+          className="btn-accent inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold disabled:opacity-50 cursor-pointer"
         >
           {isSubmitting ? 'Salvataggio...' : 'Salva Modifiche'}
         </button>
       </div>
     </form>
+    </Modal>
   );
 }

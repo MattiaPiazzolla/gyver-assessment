@@ -30,7 +30,7 @@ export function AdvertisementFilters({
           htmlFor="filter-job-offer"
           className="block text-xs font-mono font-medium text-[#A6A6A6] uppercase tracking-wider mb-2"
         >
-          // Filtra per Job Offer
+          {"// Filtra per Job Offer"}
         </label>
         <select
           id="filter-job-offer"
@@ -60,7 +60,7 @@ export function AdvertisementFilters({
           htmlFor="filter-channel"
           className="block text-xs font-mono font-medium text-[#A6A6A6] uppercase tracking-wider mb-2"
         >
-          // Filtra per Canale
+          {"// Filtra per Canale"}
         </label>
         <select
           id="filter-channel"
@@ -74,8 +74,8 @@ export function AdvertisementFilters({
           <option value="" className="bg-[#181818] text-[#F5F5F5]">Tutti i canali</option>
           <option value="JOB_BOARD" className="bg-[#181818] text-[#F5F5F5]">JOB_BOARD (es. Indeed)</option>
           <option value="WHATSAPP" className="bg-[#181818] text-[#F5F5F5]">WHATSAPP (Chat & Anteprima A4)</option>
-          <option value="INSTAGRAM" className="bg-[#181818] text-[#F5F5F5]">INSTAGRAM (Social Ad)</option>
-          <option value="TIKTOK" className="bg-[#181818] text-[#F5F5F5]">TIKTOK (Video Ad)</option>
+          <option value="INSTAGRAM" className="bg-[#181818] text-[#F5F5F5]">INSTAGRAM (Social Feed)</option>
+          <option value="TIKTOK" className="bg-[#181818] text-[#F5F5F5]">TIKTOK (Video Hook)</option>
         </select>
       </div>
 

@@ -36,46 +36,55 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-[#080808] text-[#F5F5F5] selection:bg-[#FF4B1F]/30 selection:text-white">
-        {/* Technical Header / Navigation */}
-        <header className="sticky top-0 z-50 border-b border-[#292929] bg-[#080808]/90 backdrop-blur-md">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-4 sm:gap-6">
-              <Link
-                href="/"
-                className="flex items-center transition-opacity hover:opacity-90"
-              >
-                <Image
-                  src="/gyver_logo.svg"
-                  alt="Gyver"
-                  width={110}
-                  height={34}
-                  priority
-                  className="h-7 w-auto"
-                />
-              </Link>
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full border border-[#292929] bg-[#111111] text-[11px] font-mono text-[#A6A6A6]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF4B1F] animate-pulse" />
-                <span>DELIVERY SYSTEM</span>
-              </div>
-            </div>
+        {/* Gyver Header / Navigation aligned to gyver.work */}
+        <header className="sticky top-0 z-50 bg-[#0A0A0B]/80 backdrop-blur-md transition-all">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <Link
+              href="/"
+              className="flex items-center transition-opacity hover:opacity-90"
+            >
+              <Image
+                src="/gyver_logo.svg"
+                alt="Gyver"
+                width={100}
+                height={30}
+                priority
+                className="h-6 sm:h-7 w-auto"
+              />
+            </Link>
 
-            <div className="flex items-center gap-3 sm:gap-5">
-              <div className="hidden md:flex items-center gap-2 text-xs text-[#A6A6A6]">
-                <span className="font-mono text-[#FF4B1F] font-semibold">
-                  25.000+
-                </span>
-                <span>tecnici nella community</span>
-              </div>
+            <nav className="flex items-center gap-3 sm:gap-7">
+              <span className="px-4 py-2 rounded-full border border-[#292929] bg-[#141417] text-white text-xs sm:text-sm font-medium tracking-tight">
+                Per tecnici elettrici
+              </span>
 
               <a
-                href="https://gyver.work/"
+                href="https://gyver.work/companies"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-[#292929] bg-[#111111] text-[#F5F5F5] hover:bg-[#181818] hover:border-[#383838] transition-colors"
+                className="text-xs sm:text-sm text-[#A6A6A6] hover:text-white transition-colors"
               >
-                gyver.work &rarr;
+                Per aziende
               </a>
-            </div>
+
+              <a
+                href="https://gyver.work/join"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs sm:text-sm text-[#A6A6A6] hover:text-white transition-colors hidden sm:inline-block"
+              >
+                Careers
+              </a>
+
+              <a
+                href="https://gyver.work/contattaci"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs sm:text-sm text-[#A6A6A6] hover:text-white transition-colors hidden sm:inline-block"
+              >
+                Contattaci
+              </a>
+            </nav>
           </div>
         </header>
 
@@ -93,15 +102,15 @@ export default function RootLayout({
                 alt="Gyver"
                 width={80}
                 height={24}
-                className="h-4 w-auto opacity-70"
+                className="h-4 w-auto opacity-80"
               />
               <span className="text-[#292929]">|</span>
               <span className="text-[#A6A6A6]">
-                Il collega che si prende cura della tua carriera.
+                Gyver &mdash; Il collega che si prende cura della tua carriera.
               </span>
             </div>
             <div className="flex items-center gap-4 text-[#737373]">
-              <span>Industrial &bull; Technical &bull; Direct</span>
+              <span>Sempre al tuo fianco su WhatsApp</span>
               <span>&copy; {new Date().getFullYear()} Gyver</span>
             </div>
           </div>
